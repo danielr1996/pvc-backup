@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: <name>
+  namespace: <release namespace>
+spec:
+  schedule: "*/10 * * * *" # Run every 10 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccount: <the created service account name>
+          containers:
+            - name: backup
+              image: ghcr.io/danielr1996/pvc-backup:latest
+              workingDir: /data
+              env:
+                - name: PVC
+                  value: "<pvc name>"
+                - name: NAMESPACE
+                  value: <pvc namespace>
+                - name: SECRETNAME
+                  value: <secret name>
+                - name: SECRETNAMESPACE
+                  value: <secret namespace>

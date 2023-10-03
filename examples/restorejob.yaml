@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: restore--
+  namespace: <release namespace>
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccount: <the created service account name>
+      containers:
+        - name: backup
+          image: ghcr.io/danielr1996/pvc-backup:latest
+          workingDir: /data
+          command: ['restore']
+          env:
+            - name: PVC
+              value: "<pvc name>"
+            - name: NAMESPACE
+              value: <pvc namespace>
+            - name: SECRETNAME
+              value: <secret name>
+            - name: SECRETNAMESPACE
+              value: <secret namespace>
